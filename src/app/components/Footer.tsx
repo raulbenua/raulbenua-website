@@ -5,13 +5,19 @@ export default function Footer() {
     <footer className="text-center z-10">
       <ul className="flex gap-4 fixed bottom-0 w-full justify-between px-6 pb-2 portrait:text-[min(4vw,2rem)] landscape:text-[min(1.5vw,1.5rem)]">
         <li>
-          <Link href="https://www.instagram.com/raul_benua">instagram</Link>
+          <Link href="https://www.instagram.com/raul_benua" target="_blank">
+            instagram
+          </Link>
         </li>
         <li>
-          <Link href="mailto:raulbenua@gmail.com">raulbenua@gmail.com</Link>
+          <Link href="mailto:raulbenua@gmail.com" target="_blank">
+            raulbenua@gmail.com
+          </Link>
         </li>
         <li>
-          <Link href="https://wa.me/+51941103338">whatsapp</Link>
+          <Link href="https://wa.me/+51941103338" target="_blank">
+            whatsapp
+          </Link>
         </li>
       </ul>
     </footer>
