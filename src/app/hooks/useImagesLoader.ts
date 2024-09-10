@@ -16,7 +16,7 @@ export default function useImagesLoader(images: string[]) {
     const loadImage = (src: string) => {
       return new Promise<void>((resolve, reject) => {
         const img = new Image()
-        img.src = src + '?t=' + Math.random() // Evita el caché
+        img.src = src + '?v=' + Date.now()
         img.onload = () => {
           resolve()
         }
