@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${garam.variable} antialiased bg-black text-[#B3B3B3] font-garam`}>{children}</body>
+      <body className={`${garam.variable} antialiased font-garam`}>{children}</body>
     </html>
   )
 }

@@ -4,11 +4,10 @@
 
 html,
 body {
-  overflow: hidden;
-  scroll-behavior: none;
+  @apply overflow-hidden text-[#B3B3B3] bg-black;
 }
 
 .font-garam {
   font-family: var(--font-garam);
-  font-weight: bold;
+  @apply font-bold;
 }
