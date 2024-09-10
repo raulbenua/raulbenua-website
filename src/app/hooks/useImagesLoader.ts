@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 export default function useImagesLoader(images: string[]) {
   const [loadedImages, setLoadedImages] = useState(false)
   const [loadingProgress, setLoadingProgress] = useState(0)
+  const [error, setError] = useState<string | null>(null)
   const isMounted = useRef(true)
 
   useEffect(() => {
@@ -17,7 +18,7 @@ export default function useImagesLoader(images: string[]) {
     const loadImage = (src: string) => {
       return new Promise<void>((resolve, reject) => {
         const img = new Image()
-        img.src = src + '?t=' + Math.random()
+        img.src = src + '?t=' + Math.random() // Evita el caché
         img.onload = () => resolve()
         img.onerror = () => reject(new Error(`Failed to load image: ${src}`))
       })
@@ -27,13 +28,18 @@ export default function useImagesLoader(images: string[]) {
       let loadedCount = 0
 
       for (const src of images) {
-        if (!isMounted.current) break
+        if (!isMounted.current) return
         try {
           await loadImage(src)
           loadedCount++
           setLoadingProgress(Math.round((loadedCount / images.length) * 100))
         } catch (error) {
-          console.error((error as Error).message)
+          if (isMounted.current) {
+            setError((error as Error).message)
+            for (let i = loadedCount; i < images.length; i++) {
+              await loadImage(images[i])
+            }
+          }
         }
       }
 
@@ -49,5 +55,5 @@ export default function useImagesLoader(images: string[]) {
     }
   }, [images])
 
-  return { loadedImages, loadingProgress }
+  return { loadedImages, loadingProgress, error }
 }
