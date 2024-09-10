@@ -2,8 +2,13 @@ export default function ProgressBar({ loadingProgress }: { loadingProgress: numb
   return (
     <div className="flex items-center justify-center h-screen">
       <div
-        className="h-[2px] bg-white animate-expand border-none"
-        style={{ width: `${loadingProgress * 0.8}%`, transition: 'width 0.5s' }}
+        className="h-[2px] bg-white border-none"
+        style={{
+          transform: `scaleX(${loadingProgress / 100})`,
+          transformOrigin: 'left',
+          transition: 'transform 0.5s',
+          width: '80%',
+        }}
       ></div>
     </div>
   )
