@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export default function useImagesLoader(images: string[]) {
+const useImagesLoader = (images: string[]) => {
   const [loadedImages, setLoadedImages] = useState(false)
   const [loadingProgress, setLoadingProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
@@ -16,7 +16,7 @@ export default function useImagesLoader(images: string[]) {
     const loadImage = (src: string) => {
       return new Promise<void>((resolve, reject) => {
         const img = new Image()
-        img.src = src // Remueve el parámetro ?v= para evitar cambios constantes en la URL
+        img.src = `${src}?v=${Date.now()}` // Añade un timestamp a la URL
         img.onload = () => resolve()
         img.onerror = () => reject(new Error(`Failed to load image: ${src}`))
       })
@@ -44,3 +44,5 @@ export default function useImagesLoader(images: string[]) {
 
   return { loadedImages, loadingProgress, error }
 }
+
+export default useImagesLoader
