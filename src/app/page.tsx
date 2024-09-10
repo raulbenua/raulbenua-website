@@ -45,7 +45,9 @@ export default function Home() {
           const progress = (loadedImages / totalImages) * 100
           setLoadingProgress(progress)
           if (loadedImages === totalImages) {
-            resolve()
+            setTimeout(() => {
+              resolve()
+            }, 1000)
           }
         }
         img.onerror = reject
