@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 
 interface GalleryProps {
   imagesH: string[]
@@ -35,7 +36,12 @@ export default function Gallery({ imagesH, imagesV }: GalleryProps) {
   const currentImages = isLandscape ? imagesH : imagesV
 
   return (
-    <div className="w-screen h-screen relative overflow-hidden z-0">
+    <motion.div
+      className="w-screen h-screen relative overflow-hidden z-0"
+      initial={{ scale: 1.05 }}
+      animate={{ scale: 1 }}
+      transition={{ duration: 0.5, ease: 'easeInOut' }}
+    >
       {currentImages.map((src, index) => (
         <div
           key={index}
@@ -46,6 +52,6 @@ export default function Gallery({ imagesH, imagesV }: GalleryProps) {
           <Image src={src} alt={`Gallery image ${index + 1}`} fill style={{ objectFit: 'cover' }} />
         </div>
       ))}
-    </div>
+    </motion.div>
   )
 }
