@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react'
 
-const useImagesLoader = (images: string[]) => {
+export default function useImagesLoader(images: string[]) {
   const [loadedImages, setLoadedImages] = useState(false)
   const [loadingProgress, setLoadingProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Maneja el caso en el que no hay imágenes para cargar
     if (images.length === 0) {
       setLoadedImages(true)
       setLoadingProgress(100)
+      console.log('Finished')
       return
     }
 
     const loadImage = (src: string) => {
       return new Promise<void>((resolve, reject) => {
         const img = new Image()
-        img.src = `${src}?v=${Date.now()}` // Añade un timestamp a la URL
+        img.src = src
         img.onload = () => resolve()
         img.onerror = () => reject(new Error(`Failed to load image: ${src}`))
       })
@@ -30,6 +30,7 @@ const useImagesLoader = (images: string[]) => {
           images.map(async (src) => {
             await loadImage(src)
             loadedCount++
+            console.log('Loaded', loadedCount, ' of ', images.length)
             setLoadingProgress(Math.round((loadedCount / images.length) * 100))
           })
         )
@@ -44,5 +45,3 @@ const useImagesLoader = (images: string[]) => {
 
   return { loadedImages, loadingProgress, error }
 }
-
-export default useImagesLoader
