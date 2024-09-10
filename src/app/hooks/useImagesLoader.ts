@@ -16,10 +16,8 @@ export default function useImagesLoader(images: string[]) {
     const loadImage = (src: string) => {
       return new Promise<void>((resolve, reject) => {
         const img = new Image()
-        img.src = src + '?v=' + Date.now()
-        img.onload = () => {
-          resolve()
-        }
+        img.src = src // Remueve el parámetro ?v= para evitar cambios constantes en la URL
+        img.onload = () => resolve()
         img.onerror = () => reject(new Error(`Failed to load image: ${src}`))
       })
     }
@@ -27,17 +25,18 @@ export default function useImagesLoader(images: string[]) {
     const loadAllImages = async () => {
       let loadedCount = 0
 
-      for (const src of images) {
-        try {
-          await loadImage(src)
-          loadedCount++
-          setLoadingProgress(Math.round((loadedCount / images.length) * 100))
-        } catch (error) {
-          setError((error as Error).message)
-        }
+      try {
+        await Promise.all(
+          images.map(async (src) => {
+            await loadImage(src)
+            loadedCount++
+            setLoadingProgress(Math.round((loadedCount / images.length) * 100))
+          })
+        )
+        setLoadedImages(true)
+      } catch (error) {
+        setError((error as Error).message)
       }
-
-      setLoadedImages(true)
     }
 
     loadAllImages()
