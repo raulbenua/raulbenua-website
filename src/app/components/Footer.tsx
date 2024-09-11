@@ -11,12 +11,12 @@ export default function Footer() {
         </li>
         <li>
           <Link href="mailto:raulbenua@gmail.com" target="_blank">
-            raulbenua@gmail.com
+            info@raulbenua.com
           </Link>
         </li>
         <li>
-          <Link href="https://wa.me/+51941103338" target="_blank">
-            whatsapp
+          <Link href="/files/2024-Portfolio-Raul-Benua.pdf" target="_blank">
+            portfolio
           </Link>
         </li>
       </ul>
