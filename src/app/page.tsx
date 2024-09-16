@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import Footer from '@/app/components/Footer'
 import Gallery from '@/app/components/Gallery'
@@ -13,59 +13,65 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [loadingProgress, setLoadingProgress] = useState(0)
 
+  const preloadImages = useCallback(async (urls: string[]): Promise<void> => {
+    const totalImages = urls.length
+    if (totalImages === 0) return
+
+    let loadedImages = 0
+
+    await Promise.allSettled(
+      urls.map(
+        (url) =>
+          new Promise<void>((resolve) => {
+            const img = new Image()
+            img.src = url
+            img.onload = () => {
+              loadedImages++
+              setLoadingProgress((loadedImages / totalImages) * 100)
+              resolve()
+            }
+            img.onerror = () => {
+              console.error(`Failed to load image: ${url}`)
+              loadedImages++
+              setLoadingProgress((loadedImages / totalImages) * 100)
+              resolve() // Resolvemos en lugar de rechazar para continuar cargando otras imágenes
+            }
+          })
+      )
+    )
+
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+  }, [])
+
   useEffect(() => {
     const fetchContent = async () => {
-      const response = await fetch('/content.json')
-      const data = await response.json()
-      setContent(data)
+      try {
+        const response = await fetch('/content.json')
+        if (!response.ok) throw new Error('Error al cargar el contenido')
+        const data = await response.json()
+        setContent(data)
 
-      const urls = [...data.imagesH, ...data.imagesV]
-      await preloadImages(urls)
-      setIsLoading(false)
+        const urls = [...data.imagesH, ...data.imagesV]
+        await preloadImages(urls)
+      } catch (error) {
+        console.error('Error:', error)
+      } finally {
+        setIsLoading(false)
+      }
     }
 
     fetchContent()
-  }, [])
-
-  const preloadImages = (urls: string[]): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      let loadedImages = 0
-      const totalImages = urls.length
-
-      if (totalImages === 0) {
-        resolve()
-        return
-      }
-
-      urls.forEach((url) => {
-        const img = new Image()
-        img.src = url
-        img.onload = () => {
-          loadedImages++
-          const progress = (loadedImages / totalImages) * 100
-          setLoadingProgress(progress)
-          if (loadedImages === totalImages) {
-            setTimeout(() => {
-              resolve()
-            }, 1000)
-          }
-        }
-        img.onerror = reject
-      })
-    })
-  }
+  }, [preloadImages])
 
   if (isLoading) {
     return <ProgressBar loadingProgress={loadingProgress} />
   }
 
-  if (content) {
-    return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: 'easeInOut' }}>
-        <Header />
-        <Gallery imagesH={content?.imagesH} imagesV={content?.imagesV} />
-        <Footer />
-      </motion.div>
-    )
-  }
+  return content ? (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: 'easeInOut' }}>
+      <Header />
+      <Gallery imagesH={content.imagesH} imagesV={content.imagesV} />
+      <Footer />
+    </motion.div>
+  ) : null
 }

@@ -7,11 +7,12 @@ const garam = localFont({
   src: './fonts/garam.otf',
   variable: '--font-garam',
   weight: '100 900',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
   title: 'Raul Benua',
-  description: 'Raul Benua',
+  description: 'Portafolio de Raul Benua',
 }
 
 export default function RootLayout({
