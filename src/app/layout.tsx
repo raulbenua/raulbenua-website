@@ -12,7 +12,8 @@ const garam = localFont({
 
 export const metadata: Metadata = {
   title: 'Raul Benua',
-  description: 'Portafolio de Raul Benua',
+  description:
+    'Graphic designer and researcher with more than 10 years of experience and nominations for international awards such as Book Arles and Communication Arts, I have won the Latin American Designer Awards for two consecutive years and have expertise in editorial design. I have worked with world-renowned clients such as National Geographic. Currently, I teach at the Universidad Peruana de Ciencias Aplicadas and direct multiple graphic projects.',
 }
 
 export default function RootLayout({

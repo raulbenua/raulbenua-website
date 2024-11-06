@@ -36,7 +36,7 @@ export default function Gallery({ imagesH, imagesV }: GalleryProps) {
 
   return (
     <motion.div
-      className="w-screen h-[calc(100vh-10rem)] my-[5rem] relative overflow-hidden z-0"
+      className="w-screen h-screen relative overflow-hidden z-0"
       initial={{ scale: 1.05 }}
       animate={{ scale: 1 }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}

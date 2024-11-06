@@ -10,8 +10,8 @@ export default function Footer() {
           </Link>
         </li>
         <li>
-          <Link href="mailto:raulbenua@gmail.com" target="_blank">
-            info@raulbenua.com
+          <Link href="mailto:raulbenua.info@gmail.com" target="_blank">
+            raulbenua.info@gmail.com
           </Link>
         </li>
         <li>
