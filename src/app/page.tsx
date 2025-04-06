@@ -12,6 +12,7 @@ export default function Home() {
   const [content, setContent] = useState<{ imagesH: string[]; imagesV: string[] } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [loadingProgress, setLoadingProgress] = useState(0)
+  const [error, setError] = useState<string | null>(null)
 
   const preloadImages = useCallback(async (urls: string[]): Promise<void> => {
     const totalImages = urls.length
@@ -34,7 +35,7 @@ export default function Home() {
               console.error(`Failed to load image: ${url}`)
               loadedImages++
               setLoadingProgress((loadedImages / totalImages) * 100)
-              resolve() // Resolvemos en lugar de rechazar para continuar cargando otras imágenes
+              resolve()
             }
           })
       )
@@ -55,6 +56,7 @@ export default function Home() {
         await preloadImages(urls)
       } catch (error) {
         console.error('Error:', error)
+        setError('Error al cargar el contenido')
       } finally {
         setIsLoading(false)
       }
@@ -62,6 +64,14 @@ export default function Home() {
 
     fetchContent()
   }, [preloadImages])
+
+  if (error) {
+    return (
+      <div className="h-screen flex items-center justify-center text-center px-4">
+        <p className="text-xl">{error}</p>
+      </div>
+    )
+  }
 
   if (isLoading) {
     return <ProgressBar loadingProgress={loadingProgress} />

@@ -10,6 +10,8 @@ interface GalleryProps {
   imagesV: string[]
 }
 
+const INTERVAL_TIME = 3000
+
 export default function Gallery({ imagesH, imagesV }: GalleryProps) {
   const [currentImage, setCurrentImage] = useState(0)
   const [isLandscape, setIsLandscape] = useState(true)
@@ -20,19 +22,21 @@ export default function Gallery({ imagesH, imagesV }: GalleryProps) {
 
   const currentImages = useMemo(() => (isLandscape ? imagesH : imagesV), [isLandscape, imagesH, imagesV])
 
+  const intervalCallback = useCallback(() => {
+    setCurrentImage((prev) => (prev + 1) % currentImages.length)
+  }, [currentImages.length])
+
   useEffect(() => {
     handleResize()
     window.addEventListener('resize', handleResize)
 
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % currentImages.length)
-    }, 3000)
+    const interval = setInterval(intervalCallback, INTERVAL_TIME)
 
     return () => {
       window.removeEventListener('resize', handleResize)
       clearInterval(interval)
     }
-  }, [handleResize, currentImages])
+  }, [handleResize, intervalCallback])
 
   return (
     <motion.div
@@ -54,6 +58,8 @@ export default function Gallery({ imagesH, imagesV }: GalleryProps) {
             src={currentImages[currentImage]}
             alt={`Imagen de galería ${currentImage + 1}`}
             fill
+            sizes="100vw"
+            quality={85}
             style={{ objectFit: 'contain' }}
             priority
           />
