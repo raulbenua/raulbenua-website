@@ -60,7 +60,7 @@ export default function Gallery({ imagesH, imagesV }: GalleryProps) {
             fill
             sizes="100vw"
             quality={85}
-            style={{ objectFit: 'contain' }}
+            style={{ objectFit: 'cover' }}
             priority
           />
         </motion.div>
